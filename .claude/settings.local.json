@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wails version *)",
+      "Bash(go version *)",
+      "Bash(npm --version)",
+      "Bash(go install *)",
+      "Bash(/c/Users/ikole/go/bin/wails.exe version *)",
+      "Bash(/c/Users/ikole/go/bin/wails.exe init *)",
+      "Bash(mv vigil/* vigil/.* .)",
+      "Bash(rmdir vigil *)",
+      "Bash(go mod *)",
+      "Bash(go build *)",
+      "Bash(go vet *)",
+      "Bash(/c/Users/ikole/go/bin/wails.exe build *)",
+      "Bash(npm run *)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(mkdir -p /tmp/design)",
+      "Bash(cp \"/c/Users/ikole/.claude/projects/C--Users-ikole-notzil-vigil/629dff66-1fde-4d42-ad99-95128835f7af/tool-results/webfetch-1776818246774-kx1izx.bin\" /tmp/design/design.tar.gz)",
+      "Read(//tmp/**)",
+      "Bash(tar -xzf design.tar.gz)",
+      "Bash(cygpath *)"
+    ]
+  }
+}

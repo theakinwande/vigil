@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Vigil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+    <link rel="stylesheet" href="./src/style.css" />
+    <script src="./src/main.js" type="module" defer></script>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="wordmark">Vigil</div>
+        <nav class="nav">
+            <button class="nav-item active" data-tab="today">Today</button>
+            <button class="nav-item" data-tab="weekly">Weekly</button>
+            <button class="nav-item" data-tab="settings">Settings</button>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="page-head">
+            <h1 id="page-title">Today</h1>
+            <button id="pause-btn" class="pause-btn active">● Tracking</button>
+        </header>
+
+        <!-- Today -->
+        <section id="tab-today" class="tab-panel active">
+            <div class="stat-row">
+                <div class="card stat">
+                    <div class="stat-label">Total today</div>
+                    <div id="stat-total" class="stat-value">0m</div>
+                </div>
+                <div class="card stat">
+                    <div class="stat-label">Top app</div>
+                    <div id="stat-top" class="stat-value sm">—</div>
+                </div>
+                <div class="card stat">
+                    <div class="stat-label">Session start</div>
+                    <div id="stat-start" class="stat-value md">—</div>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="card col-left">
+                    <div class="section-label">Time by app</div>
+                    <div id="today-bars" class="bars"></div>
+                    <div id="today-empty" class="empty">No activity yet — start working and Vigil will track it.</div>
+                </div>
+                <div class="card col-right">
+                    <div class="section-label">By category</div>
+                    <div class="doughnut-wrap">
+                        <canvas id="doughnut" width="200" height="200"></canvas>
+                    </div>
+                    <div id="doughnut-legend" class="doughnut-legend"></div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="section-label">Hourly timeline</div>
+                <div class="chart-wrap timeline-wrap"><canvas id="timeline-chart"></canvas></div>
+                <div id="timeline-empty" class="empty" style="display:none;">No timeline data yet.</div>
+            </div>
+
+            <div id="hour-detail" class="card hour-detail" style="display:none; margin-top: 16px;">
+                <div class="hour-detail-head">
+                    <h3 id="hour-detail-title" class="hour-detail-title"></h3>
+                    <button id="hour-detail-close" class="hour-detail-close" aria-label="Close">×</button>
+                </div>
+                <div id="hour-detail-body" class="bars"></div>
+            </div>
+        </section>
+
+        <!-- Weekly -->
+        <section id="tab-weekly" class="tab-panel">
+            <div class="weekly-header">
+                <div class="avg-block">
+                    <div class="avg-label">DAILY AVERAGE</div>
+                    <div id="weekly-avg" class="avg-value">0m</div>
+                    <div class="week-navigator">
+                        <button id="week-prev" class="nav-arrow" aria-label="Previous week">‹</button>
+                        <span id="week-range" class="week-range">—</span>
+                        <button id="week-next" class="nav-arrow" aria-label="Next week">›</button>
+                    </div>
+                    <a id="week-today-link" class="week-today-link" style="display:none;">Jump to current week</a>
+                </div>
+                <div class="pill-row">
+                    <div class="stat-pill">
+                        <div class="pill-label">This week</div>
+                        <div id="weekly-total" class="pill-value">0m</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="pill-label">Busiest day</div>
+                        <div id="weekly-busiest-day" class="pill-value">—</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="pill-label">Top app</div>
+                        <div id="weekly-busiest-app" class="pill-value">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="chart-wrap chart-wrap-weekly">
+                    <canvas id="weekly-bar-chart"></canvas>
+                    <div id="weekly-chart-empty" class="chart-empty" style="display:none;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        <div class="chart-empty-title">No data for this week</div>
+                        <div class="chart-empty-sub">Vigil wasn't running or no apps were tracked</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="day-detail" class="card hour-detail" style="display:none; margin-top: 16px;">
+                <div class="hour-detail-head">
+                    <h3 id="day-detail-title" class="hour-detail-title"></h3>
+                    <button id="day-detail-close" class="hour-detail-close" aria-label="Close">×</button>
+                </div>
+                <div id="day-detail-body" class="bars"></div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="section-label">By category this week</div>
+                <div id="cat-stacked-bar" class="cat-stacked-bar"></div>
+                <div id="cat-stacked-legend" class="cat-stacked-legend"></div>
+                <div id="cat-stacked-empty" class="empty" style="display:none;">No category data yet.</div>
+            </div>
+
+        </section>
+
+        <!-- Settings -->
+        <section id="tab-settings" class="tab-panel">
+            <div class="settings">
+                <div class="setting">
+                    <h2 class="setting-title">Break reminders</h2>
+                    <label class="setting-label" for="break-interval">Remind me every</label>
+                    <div class="inline-row">
+                        <input id="break-interval" type="number" min="5" max="240" value="45" />
+                        <span class="inline-text">minutes</span>
+                        <button id="save-interval" class="primary">Save</button>
+                        <span id="interval-saved" class="saved-hint">Saved ✓</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="setting">
+                    <h2 class="setting-title">Idle detection</h2>
+                    <div class="setting-body">Pause after 5 minutes of inactivity</div>
+                    <div class="setting-helper">Idle time is never counted toward any app</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="setting">
+                    <h2 class="setting-title">Categories</h2>
+                    <table class="overrides">
+                        <thead>
+                            <tr><th>App</th><th>Category</th></tr>
+                        </thead>
+                        <tbody id="overrides-body"></tbody>
+                    </table>
+                    <div id="overrides-empty" class="empty" style="display:none;">No tracked apps yet.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
